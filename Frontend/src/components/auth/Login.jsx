@@ -10,7 +10,7 @@ import axios from 'axios'
 import { USER_API_AND_POINT } from '@/utils/constant'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
-import { Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 const Login = () => {
 
@@ -20,6 +20,8 @@ const Login = () => {
     role: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false); //
+
   const { loading, user } = useSelector(store => store.auth)
   const navigate = useNavigate();
   // useNavigate hook ka istemal karein
@@ -27,6 +29,10 @@ const Login = () => {
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {// password ko show karna k liye
+    setShowPassword(!showPassword);
   };
 
   const submitHandler = async (e) => {
@@ -79,15 +85,18 @@ const Login = () => {
             />
           </div>
 
-          <div className='my-2'>
+          <div className='my-2 relative'>
             <Label>Password</Label>
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={input.password}
               name="password"
               onChange={changeEventHandler}
-              placeholder="Create a password"
+              placeholder="Enter your password"
             />
+            <span onClick={togglePasswordVisibility} className="absolute right-3 top-8 cursor-pointer">
+              {showPassword ? <Eye /> : <EyeOff />}
+            </span>
           </div>
           <div className='flex items-center justify-between'>
             <RadioGroup className='flex items-center gap-4 my-5'>

@@ -9,7 +9,8 @@ import {
     DialogContent,
     DialogFooter,
     DialogHeader,
-    DialogTitle
+    DialogTitle,
+    DialogClose
 } from './ui/dialog';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
@@ -22,10 +23,10 @@ const UpdateProfileDialoge = ({ open, setOpen }) => {
     const dispatch = useDispatch();
 
     const [input, setInput] = useState({
-        fullname: user?.fullname,
-        email: user?.email,
-        phoneNumber: user?.phoneNumber,
-        bio: user?.profile?.bio,
+        fullname: user?.fullname || '',
+        email: user?.email || '',
+        phoneNumber: user?.phoneNumber || '',
+        bio: user?.profile?.bio || '',
         skills: user?.profile?.skills.join(', ') || '',
         file: null
     });
@@ -68,21 +69,22 @@ const UpdateProfileDialoge = ({ open, setOpen }) => {
         setOpen(false);
     };
 
-
     return (
         <div>
-            <Dialog open={open}>
-                <DialogContent className="sm:max-w-[425px]" onInteractOutside={() => setOpen(false)}>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>Update Profile</DialogTitle>
+                        <DialogClose  onClick={() => setOpen(false)}
+                        />
                     </DialogHeader>
                     <form onSubmit={submitHandler}>
                         <div className='grid gap-4 py-4'>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor="name" className="text-right">Name</Label>
+                                <Label htmlFor="fullname" className="text-right">Name</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="fullname"
+                                    name="fullname"
                                     value={input.fullname}
                                     onChange={changeEventHandler}
                                     className="col-span-3"
@@ -100,11 +102,11 @@ const UpdateProfileDialoge = ({ open, setOpen }) => {
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor="number" className="text-right">Number</Label>
+                                <Label htmlFor="phoneNumber" className="text-right">Number</Label>
                                 <Input
-                                    id="number"
-                                    name="number"
-                                    type="number"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    type="tel"
                                     value={input.phoneNumber}
                                     onChange={changeEventHandler}
                                     className="col-span-3"
@@ -131,30 +133,31 @@ const UpdateProfileDialoge = ({ open, setOpen }) => {
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                            <Label htmlFor="file" className="text-right">Resume</Label>
-                            <Input
-                                id="file"
-                                name="file"
-                                type="file"
-                                accept="application/pdf"
-                                onChange={fileChangeHandler}
-                                className="col-span-3"
-                            />
-                        </div>
+                                <Label htmlFor="file" className="text-right">Resume</Label>
+                                <Input
+                                    id="file"
+                                    name="file"
+                                    type="file"
+                                    accept="application/pdf"
+                                    onChange={fileChangeHandler}
+                                    className="col-span-3"
+                                />
+                            </div>
                         </div>
                         <DialogFooter>
-                            {
-                                loading ? <Button className="w-full my-4"><Loader2 className='w-4 h-4 mr-2 animate-spin' />Please wait</Button> : <Button type="submit" className="w-full my-4">Update</Button>
-                            }
+                            {loading ? (
+                                <Button className="w-full my-4">
+                                    <Loader2 className='w-4 h-4 mr-2 animate-spin' /> Please wait
+                                </Button>
+                            ) : (
+                                <Button type="submit" className="w-full my-4">Update</Button>
+                            )}
                         </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>
         </div>
-    )
+    );
 }
 
-export default UpdateProfileDialoge
-
-
-
+export default UpdateProfileDialoge;
